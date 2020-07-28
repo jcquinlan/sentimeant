@@ -5,9 +5,46 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-bottom: 60px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+p, span, li, a {
+  font-family: 'Nunito', sans-serif;
+  color: #333;
+}
+
+.btn-primary {
+  background-color: #ff9ccf;
+  border-color: #ff9ccf;
+}
+
+.btn-primary:hover {
+  background-color: #ff9ccf;
+  border-color: #ff9ccf;
+}
+
+.btn-primary:focus {
+  background-color: #ff9ccf;
+  border-color: #ff9ccf;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+  border-color: #ff9ccf;
+  background-color: #ff9ccf;
+  box-shadow: 0 0 0 0.2rem rgba(255, 74, 225, 0.25)
+}
+
+.form-control:focus {
+  border-color: #ff9ccf;
+  box-shadow: 0 0 0 0.2rem rgba(255, 74, 225, 0.25)
 }

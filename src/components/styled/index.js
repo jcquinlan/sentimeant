@@ -4,6 +4,7 @@ import {Link} from './Link';
 
 export const Colors = {
     Pink: '#ff9ccf',
+    Red: '#e32424'
 }
 
 const Button = styled.button`
@@ -37,7 +38,7 @@ const Hero = styled.div`
     width: 100%;
     align-items: center;
     justify-content: center;
-    padding: 50px 0;
+    padding: 50px 0 30px 0;
     
     p {
         font-size: 18px;
@@ -48,6 +49,19 @@ const SectionWrapper = styled.div`
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
+`;
+
+const Section = styled.div`
+    margin-bottom: 30px;
+    width: 100%;
+`;
+
+const SectionTitle = styled.h4`
+    font-size: 20px;
+`;
+
+const SectionBody = styled.p`
+
 `;
 
 const MarginBox = styled.div`
@@ -62,6 +76,12 @@ const Separator = styled.div`
     margin: 60px 0;
 `;
 
+const MessageText = styled.h3`
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: ${Colors.Red};
+`;
+
 export {
     Title,
     Link,
@@ -70,6 +90,10 @@ export {
     Small,
     Hero,
     SectionWrapper,
+    Section,
+    SectionTitle,
+    SectionBody,
     MarginBox,
-    Separator
+    Separator,
+    MessageText
 };

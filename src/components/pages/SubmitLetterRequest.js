@@ -1,16 +1,40 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {useHistory} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
-import {Hero, Title, SectionWrapper, MarginBox, CenterBox, Small} from '../styled';
+import {Hero, Title, SectionWrapper, MarginBox, CenterBox, Small, MessageText} from '../styled';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import {DataContext} from '../../contexts/data';
+import { createLetterRequest } from '../../services/requestService';
 
-const backgroundPlaceholder = "We met 2 years ago. My petname for them is 'Greenbean' and we went to the Grand Canyon together last year. We camped for 2 weeks there, and we said we love eachother for the first time on that trip. They snore lightly, but it comforts me to hear because it means I know they're sleeping peacefully. They taught me to whistle, and I think of them when I hear whistling in songs."
+const backgroundPlaceholder = "We met 2 years ago. My petname for them is 'Greenbean' and we went to the Grand Canyon together last year. We camped for 2 weeks there, and we said we love each other for the first time on that trip. They taught me to whistle, and I think of them when I hear whistling in songs."
 const shittyLoveLetter = "Roses are red, violets are blue, I love you as much as someone who loves someone else a whole lot."
+const descriptionPlaceholder = "They are loud, but I like that about them, because they have so much energy and I don't. \
+They always say what they feel as they feel it, and say it in a way like they're discovering their feelings as the words come out. \
+They snore a little bit, too, but I like that because it means they're sleeping peacefully, which is important to me. \
+Their favorite time of day is dusk, and they always drink a coffee on the porch when it rains.";
 
 const SubmitLetterRequest = () => {
-    const { register, handleSubmit, errors } = useForm();
-    const onSubmit = data => console.log(data);
+    const history = useHistory();
+    const dataContext = useContext(DataContext);
+    const {register, handleSubmit} = useForm();
+    const onSubmit = formData => {
+        createLetterRequest({
+            ownerId: dataContext.currentUser.uid,
+            name: formData.name,
+            description: formData.description,
+            miscInfo: formData.miscInfo,
+            ownVersion: formData.draft,
+            title: formData.title
+        }).then(res => {
+            // @TODO - Redirect the user to their new post, or the list of all posts, or something
+            history.push('/');
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    };
 
     return (
         <>
@@ -26,25 +50,30 @@ const SubmitLetterRequest = () => {
             </Hero>
         </Row>
 
+        {!dataContext.currentUser && (
+            <Row>
+                <SectionWrapper>
+                    <MessageText>Only registered users can request letters.</MessageText>
+                </SectionWrapper>
+            </Row>
+        )}
+
         <Row>
             <SectionWrapper>
                 <Form onSubmit={handleSubmit(onSubmit)}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Your Email Address</Form.Label>
-                        <Form.Control name="email" ref={register({required: true})} type="email" placeholder="unromantic@cantwrite.gov" />
-                        <Form.Text className="text-muted">
-                        We'll never share your email with anyone else, promise.
-                        </Form.Text>
-                    </Form.Group>
-
                     <Form.Group controlId="formBasicName">
                         <Form.Label>Name of Recipient</Form.Label>
-                        <Form.Control name="name" ref={register({required: true})} type="text" placeholder="Clara? James? Malcolm? Tyra?" />
+                        <Form.Control name="name" disabled={!dataContext.currentUser} ref={register({required: true})} type="text" placeholder="Clara? James? Malcolm? Tyra?" />
+                    </Form.Group>
+
+                    <Form.Group controlId="formDescription">
+                        <Form.Label>Description of Recipient</Form.Label>
+                        <Form.Control name="description" disabled={!dataContext.currentUser} ref={register({required: true})} type="text" rows="10" as="textarea" placeholder={descriptionPlaceholder} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicInfo">
-                        <Form.Label>Background Info</Form.Label>
-                        <Form.Control name="basicInfo" ref={register({required: true})} type="text" rows="10" as="textarea" placeholder={backgroundPlaceholder} />
+                        <Form.Label>Miscellaneous Info</Form.Label>
+                        <Form.Control name="miscInfo" disabled={!dataContext.currentUser} ref={register({required: true})} type="text" rows="10" as="textarea" placeholder={backgroundPlaceholder} />
                     </Form.Group>
 
                     <Form.Text>
@@ -57,7 +86,7 @@ const SubmitLetterRequest = () => {
 
                     <Form.Group controlId="formBasicDraft">
                         <Form.Label>Shitty Version That You Wrote</Form.Label>
-                        <Form.Control name="draft" ref={register()} type="text" rows="10" as="textarea" placeholder={shittyLoveLetter} />
+                        <Form.Control name="draft" disabled={!dataContext.currentUser} ref={register()} type="text" rows="10" as="textarea" placeholder={shittyLoveLetter} />
                     </Form.Group>
 
                     <Form.Text>
@@ -69,10 +98,10 @@ const SubmitLetterRequest = () => {
 
                     <Form.Group controlId="formBasicTitle">
                         <Form.Label>Title of Request</Form.Label>
-                        <Form.Control name="name" ref={register({required: true})} type="text" placeholder="Letter for partner of 2 years - looking for extra sappiness" />
+                        <Form.Control name="title" disabled={!dataContext.currentUser} ref={register({required: true})} type="text" placeholder="Letter for partner of 2 years - looking for extra sappiness" />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button disabled={!dataContext.currentUser} variant="primary" type="submit">
                         Submit
                     </Button>
                 </Form>

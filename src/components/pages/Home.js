@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {Row, Button} from 'react-bootstrap';
 import {Title, CenterBox, Small, Hero, SectionWrapper, Separator} from '../styled';
 
-
 function Home () {
     return (
         <>

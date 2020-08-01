@@ -1,11 +1,49 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import {Row} from 'react-bootstrap';
 import {Hero, Title, SectionWrapper, Colors} from '../styled';
-import Button from 'react-bootstrap/Button';
+import {getRequests} from '../../services/requestService';
 
 const ViewOpenRequests = () => {
+    const history = useHistory();
+    const [requests, setRequests] = useState([]);
+
+    useEffect(() => {
+        getRequests().then(requestSnapshot => {
+            const requestList = [];
+            requestSnapshot.forEach(snapshot => {
+                const snapshotData = snapshot.data();
+                requestList.push({...snapshotData, id: snapshot.id});
+            });
+            setRequests(requestList);
+        });
+    }, []);
+
+    const goToRequest = (requestId) => {
+        history.push(`/request/${requestId}`);
+    }
+
+    const renderRequests = () => {
+        return requests.map(request => (
+            <RequestPreview key={request.id} onClick={() => goToRequest(request.id)}>
+                <InfoBox>
+                    <Number>0</Number>
+                    drafts
+                </InfoBox>
+
+                <RequestTitle>
+                    {request.title}
+                </RequestTitle>
+
+                <InfoBox>
+                    <Date>{moment().format('M/D/YY')}</Date>
+                    created
+                </InfoBox>
+            </RequestPreview>
+        ))
+    }
 
     return (
         <>
@@ -23,21 +61,7 @@ const ViewOpenRequests = () => {
 
         <Row>
             <SectionWrapper>
-                <RequestPreview>
-                    <InfoBox>
-                        <Number>5</Number>
-                        drafts
-                    </InfoBox>
-
-                    <RequestTitle>
-                        This is gonna be a really long title for this request because I need to make sure that we can crop the text elegantly.
-                    </RequestTitle>
-
-                    <InfoBox>
-                        <Date>{moment().format('M/D/YY')}</Date>
-                        created
-                    </InfoBox>
-                </RequestPreview>
+                {renderRequests()}
             </SectionWrapper>
         </Row>
         </>

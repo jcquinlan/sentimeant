@@ -38,6 +38,11 @@ p, span, li, a {
   border-color: #ff9ccf;
 }
 
+.btn-primary:disabled {
+  background-color: #ff9ccf;
+  border-color: #ff9ccf
+}
+
 .btn-primary:not(:disabled):not(.disabled):active {
   border-color: #ff9ccf;
   background-color: #ff9ccf;

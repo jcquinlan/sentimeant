@@ -9,6 +9,7 @@ import {getRequests} from '../../services/requestService';
 const ViewOpenRequests = () => {
     const history = useHistory();
     const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getRequests().then(requestSnapshot => {
@@ -18,7 +19,8 @@ const ViewOpenRequests = () => {
                 requestList.push({...snapshotData, id: snapshot.id});
             });
             setRequests(requestList);
-        });
+        })
+        .finally(() => setLoading(false));
     }, []);
 
     const goToRequest = (requestId) => {
@@ -61,6 +63,8 @@ const ViewOpenRequests = () => {
 
         <Row>
             <SectionWrapper>
+                {loading && <p>Loading...</p>}
+                {!loading && !requests.length && <p>There are no open requests at the moment.</p>}
                 {renderRequests()}
             </SectionWrapper>
         </Row>

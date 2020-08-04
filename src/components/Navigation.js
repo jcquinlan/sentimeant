@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import firebase from 'firebase';
+import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -14,6 +16,18 @@ const NavStyles = {
 
 const Navigation = () => {
     const data = useContext(DataContext);
+    const history = useHistory();
+    const signOut = () => {
+        firebase.auth().signOut()
+            .then(() => {
+                history.replace('/');
+                data.setCurrentUser(null);
+
+            })
+            .catch(err => {
+                console.error(err)
+            });
+    }
 
     return (
         <Navbar expand="lg" variant="light" style={NavStyles}>
@@ -28,6 +42,7 @@ const Navigation = () => {
                         <Link to="/new">Request a Letter</Link>
                         <Link to="/open-requests">Write a Letter</Link>
                         {!data.currentUser && <Link to="/sign-in">Sign In</Link>}
+                        {!!data.currentUser && <Link onClick={signOut}>Sign Out</Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

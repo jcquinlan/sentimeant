@@ -4,7 +4,8 @@ import {Link} from './Link';
 
 export const Colors = {
     Pink: '#ff9ccf',
-    Red: '#e32424'
+    Red: '#e32424',
+    Green: '#3cc761'
 }
 
 const Button = styled.button`
@@ -82,6 +83,11 @@ const MessageText = styled.h3`
     color: ${Colors.Red};
 `;
 
+const ButtonRow = styled.div`
+    display: flex;
+    margin-bottom: 30px;
+`;
+
 export {
     Title,
     Link,
@@ -95,5 +101,6 @@ export {
     SectionBody,
     MarginBox,
     Separator,
-    MessageText
+    MessageText,
+    ButtonRow
 };

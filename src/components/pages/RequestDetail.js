@@ -54,7 +54,12 @@ const RequestDetail = () => {
     const handleSubmitDraft = () => {
         if (!editorState || !editorState.length) return;
 
-        submitDraft({requestId, content: JSON.stringify(editorState)})
+        submitDraft({
+            requestId,
+            content: JSON.stringify(editorState),
+            ownerId: request.ownerId,
+            requestTitle: request.title
+        })
             .then(() => {
                 // @TODO - hook up a toast message or something
                 history.push('/');
@@ -102,7 +107,7 @@ const RequestDetail = () => {
                             )}
                         </div>
                         <div>
-                            <span>Submitted {moment(draft.createdAt.seconds * 1000).format('l')}</span>
+                            <SubmittedText>Submitted {moment(draft.createdAt.seconds * 1000).format('l')}</SubmittedText>
                             {isRequestOwner && !hasAlreadyAcceptedDraft && (
                                 <MiniButton onClick={() => handleAcceptDraft(draft.id)}>Accept Draft</MiniButton>
                             )}
@@ -234,6 +239,10 @@ const RequestDetail = () => {
         </>
     )
 };
+
+const SubmittedText = styled.span`
+    color: #888;
+`;
 
 const CheckIcon = styled(FontAwesomeIcon)`
     margin-left: 5px;

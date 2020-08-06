@@ -2,49 +2,57 @@ import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
+import {groupBy} from 'lodash';
 import {Row} from 'react-bootstrap';
 import {Hero, Title, SectionWrapper, Colors} from '../styled';
-import {getRequests} from '../../services/requestService';
+import {getRequests, getDraftsForRequests, convertSnapshotToArray} from '../../services/requestService';
 
 const ViewOpenRequests = () => {
     const history = useHistory();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [drafts, setDrafts] = useState({});
 
     useEffect(() => {
         getRequests().then(requestSnapshot => {
-            const requestList = [];
-            requestSnapshot.forEach(snapshot => {
-                const snapshotData = snapshot.data();
-                requestList.push({...snapshotData, id: snapshot.id});
-            });
+            const requestList = convertSnapshotToArray(requestSnapshot);
             setRequests(requestList);
+            const requestIds = requestList.map(({id}) => id);
+            return getDraftsForRequests(requestIds);
+        })
+        .then(draftsSnapshot => {
+            const drafts = convertSnapshotToArray(draftsSnapshot);
+            setDrafts(groupBy(drafts, 'requestId'));
         })
         .finally(() => setLoading(false));
     }, []);
 
     const goToRequest = (requestId) => {
         history.push(`/request/${requestId}`);
-    }
+    };
 
     const renderRequests = () => {
-        return requests.map(request => (
-            <RequestPreview key={request.id} onClick={() => goToRequest(request.id)}>
-                <InfoBox>
-                    <Number>0</Number>
-                    drafts
-                </InfoBox>
+        return requests.map(request => {
+            const numOfDrafts = drafts[request.id] ? drafts[request.id].length : 0;
 
-                <RequestTitle>
-                    {request.title}
-                </RequestTitle>
+            return (
+                <RequestPreview key={request.id} onClick={() => goToRequest(request.id)}>
+                    <InfoBox>
+                        <Number>{numOfDrafts}</Number>
+                        draft{numOfDrafts === 1 ? '' : 's'}
+                    </InfoBox>
 
-                <InfoBox>
-                    <Date>{moment().format('M/D/YY')}</Date>
-                    created
-                </InfoBox>
-            </RequestPreview>
-        ))
+                    <RequestTitle>
+                        {request.title}
+                    </RequestTitle>
+
+                    <InfoBox>
+                        <Date>{moment().format('M/D/YY')}</Date>
+                        created
+                    </InfoBox>
+                </RequestPreview>
+            )
+        })
     }
 
     return (

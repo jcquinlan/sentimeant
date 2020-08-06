@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useHistory} from 'react-router-dom';
 import {Row, Button} from 'react-bootstrap';
 import {Title, CenterBox, Small, Hero, SectionWrapper, Separator} from '../styled';
 
 function Home () {
+    const history = useHistory();
+
     return (
         <>
             <Row>
@@ -62,7 +65,7 @@ function Home () {
             </Row>
              <Row>
                  <CenterBox>
-                    <Button variant="primary">Request a Love Letter</Button>
+                    <Button variant="primary" onClick={() => history.push('/new')}>Request a Love Letter</Button>
                  </CenterBox>
              </Row>
 
@@ -72,7 +75,7 @@ function Home () {
                 <Hero>
                     <Title>Wanna write someone's love letter?</Title>
                     <p>Maybe you're just the Shakespeare that some ineloquent, love-drunk sap has been looking for.</p>
-                    <Button variant="primary">See Open Requests</Button>
+                    <Button variant="primary" onClick={() => history.push('/open-requests')}>See Open Requests</Button>
                 </Hero>
              </Row>
 

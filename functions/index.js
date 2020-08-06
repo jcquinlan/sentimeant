@@ -8,18 +8,32 @@ async function handleNewDraft (request, response) {
     response.set('Access-Control-Allow-Origin', '*');
     response.set('Access-Control-Allow-Headers', 'Content-Type');
 
-    const parsedData = JSON.parse(request.body);
+    const {content, requestId, ownerId, requestTitle} = JSON.parse(request.body);
     
-    if (!(parsedData.content || parsedData.requestId)) {
+    if (!(content && requestId && ownerId && requestTitle)) {
         response.writeHead(400);
-        response.end('Missing either the draft content or the requestId');
+        response.end('Missing body data on the request.');
     } else {
         await db.collection('drafts').add({
-            requestId: parsedData.requestId,
-            content: parsedData.content,
+            requestId: requestId,
+            content: content,
             createdAt: new Date(),
             archived: false,
             accepted: false
+        });
+
+        const userRef = await admin.auth().getUser(ownerId);
+        const {email} = userRef.toJSON();
+
+        db.collection('mail').add({
+            to: email,
+            template: {
+                name: 'newDraftEmail',
+                data: {
+                    requestTitle,
+                    requestUrl: `https://www.sentimeant.help/request/${requestId}`
+                }
+            }
         });
 
         response.writeHead(200);
@@ -27,7 +41,4 @@ async function handleNewDraft (request, response) {
     }
 }
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
 exports.submitDraft = functions.https.onRequest(handleNewDraft);

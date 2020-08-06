@@ -1,5 +1,11 @@
 import {db} from './db';
 
+export const convertSnapshotToArray = (snapshot) => {
+    const array = [];
+    snapshot.forEach(item => array.push({...item.data(), id: item.id}));
+    return array;
+};
+
 export async function createLetterRequest ({ownerId, name, description, miscInfo, ownVersion, title}) {
     const requestRef = await db.collection('requests').add({
         ownerId,
@@ -37,6 +43,13 @@ export async function getDraftsForRequest (requestId) {
         .get();
 }
 
+export async function getDraftsForRequests (requestIds) {
+    return await db.collection('drafts')
+        .where('requestId', 'in', requestIds)
+        .where('archived', '==', false)
+        .get();
+}
+
 export async function getRequests () {
     return await db.collection('requests').get();
 }
@@ -62,10 +75,9 @@ export async function acceptDraft (draftId) {
     return await db.collection("drafts").doc(draftId).update({accepted: true});
 }
 
-export async function submitDraft ({requestId, content}) {
+export async function submitDraft ({requestId, content, ownerId, requestTitle}) {
     return fetch('http://localhost:5001/sentimeant-59375/us-central1/submitDraft', {
         method: 'POST',
-        body: JSON.stringify({requestId, content}),
-    })
-    .then(res => console.log(res));
+        body: JSON.stringify({requestId, content, ownerId, requestTitle}),
+    });
 }

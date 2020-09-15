@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import styled from 'styled-components';
+import {ToastProvider} from 'react-toast-notifications';
 import firebase from 'firebase';
 import {
   BrowserRouter as Router,
@@ -8,6 +9,7 @@ import {
 } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Navigation from './components/Navigation';
+import ScrollToTop from './components/ScrollToTop';
 import {useDataContext, DataContext} from './contexts/data';
 import Home from './components/pages/Home';
 import SubmitLetterRequest from './components/pages/SubmitLetterRequest';
@@ -29,33 +31,36 @@ export default function App() {
   }, [data]);
 
   return (
-    <DataContext.Provider value={data}>
-      <Router>
-        <div>
-          <Navigation />
+    <ToastProvider>
+      <DataContext.Provider value={data}>
+        <Router>
+          <>
+            <ScrollToTop />
+            <Navigation />
 
-          <MainContainer>
-            <Switch>
-              <Route path="/request/:requestId">
-                <RequestDetail />
-              </Route>
-              <Route path="/open-requests">
-                <ViewOpenRequests />
-              </Route>
-              <Route path="/sign-in">
-                <SignIn />
-              </Route>
-              <Route path="/new">
-                <SubmitLetterRequest />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
-          </MainContainer>
-        </div>
-      </Router>
-    </DataContext.Provider>
+            <MainContainer>
+              <Switch>
+                <Route path="/request/:requestId">
+                  <RequestDetail />
+                </Route>
+                <Route path="/open-requests">
+                  <ViewOpenRequests />
+                </Route>
+                <Route path="/sign-in">
+                  <SignIn />
+                </Route>
+                <Route path="/new">
+                  <SubmitLetterRequest />
+                </Route>
+                <Route path="/">
+                  <Home />
+                </Route>
+              </Switch>
+            </MainContainer>
+          </>
+        </Router>
+      </DataContext.Provider>
+    </ToastProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import {useToasts} from 'react-toast-notifications';
 import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 import {Row, Button} from 'react-bootstrap';
@@ -13,7 +14,7 @@ import {
     SectionTitle,
     SectionBody,
     Title,
-    MessageText,
+    ErrorMessage,
     Separator,
     ButtonRow,
     Colors
@@ -25,7 +26,9 @@ import usePermissions from '../hooks/usePermissions';
 const RequestDetail = () => {
     const {requestId} = useParams();
     const history = useHistory();
+    const {addToast} = useToasts();
     const [request, setRequest] = useState(null);
+    const [savingDraft, setSavingDraft] = useState(false);
     const [error, setError] = useState('');
     const [editorState, setEditorState] = useState(null);
     const [drafts, setDrafts] = useState([]);
@@ -54,16 +57,24 @@ const RequestDetail = () => {
     const handleSubmitDraft = () => {
         if (!editorState || !editorState.length) return;
 
+        setSavingDraft(true);
         submitDraft({
             requestId,
             content: JSON.stringify(editorState),
             ownerId: request.ownerId,
             requestTitle: request.title
         })
-            .then(() => {
-                // @TODO - hook up a toast message or something
-                history.push('/');
-            });
+        .then(() => {
+            // @TODO - hook up a toast message or something
+            addToast('Your draft has been submitted.', {appearance: 'success'});
+            history.push('/');
+        })
+        .catch(() => {
+            addToast('There was a problem submitting your draft.', {appearance: 'error'});
+        })
+        .finally(() => {
+            setSavingDraft(false);
+        });
     };
 
     const handleDeleteDraft = (draftId) => {
@@ -131,7 +142,7 @@ const RequestDetail = () => {
             <Row>
                 <Hero>
                     <SectionWrapper>
-                        <MessageText>An error has occurred.</MessageText>
+                        <ErrorMessage>An error has occurred.</ErrorMessage>
                     </SectionWrapper>
                 </Hero>
             </Row>
@@ -213,7 +224,9 @@ const RequestDetail = () => {
                         <Editor state={editorState} onChange={setEditorState} />
                     </Section>
                     <Section>
-                        <Button onClick={handleSubmitDraft}>Submit</Button>
+                        <Button disabled={savingDraft} onClick={handleSubmitDraft}>
+                            {savingDraft ? 'Loading' : 'Submit'}
+                        </Button>
                     </Section>
                 </Row>
 

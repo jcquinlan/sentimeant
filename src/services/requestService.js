@@ -14,6 +14,7 @@ export async function createLetterRequest ({ownerId, name, description, miscInfo
         miscInfo,
         ownVersion,
         title,
+        hasAcceptedDraft: false,
         createdAt: new Date()
     });
 
@@ -40,6 +41,7 @@ export async function getDraftsForRequest (requestId) {
     return await db.collection('drafts')
         .where('requestId', '==', requestId)
         .where('archived', '==', false)
+        .orderBy('createdAt', 'desc')
         .get();
 }
 
@@ -51,7 +53,9 @@ export async function getDraftsForRequests (requestIds) {
 }
 
 export async function getRequests () {
-    return await db.collection('requests').get();
+    return await db.collection('requests')
+        .where('hasAcceptedDraft', '==', false)
+        .get();
 }
 
 export async function getRequest (requestId) {
@@ -72,12 +76,16 @@ export async function deleteDraft (draftId) {
 }
 
 export async function acceptDraft (draftId) {
-    return await db.collection("drafts").doc(draftId).update({accepted: true});
+    const docRef = db.collection("drafts").doc(draftId);
+    await docRef.update({accepted: true});
+    const draftRef = await docRef.get();
+    const {requestId} = draftRef.data();
+    await db.collection("requests").doc(requestId).update({hasAcceptedDraft: true});
 }
 
 export async function submitDraft ({requestId, content, ownerId, requestTitle}) {
     return fetch('http://localhost:5001/sentimeant-59375/us-central1/submitDraft', {
         method: 'POST',
         body: JSON.stringify({requestId, content, ownerId, requestTitle}),
-    });
+    })
 }

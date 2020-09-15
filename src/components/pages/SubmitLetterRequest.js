@@ -1,8 +1,9 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
+import {useToasts} from 'react-toast-notifications';
 import {useHistory} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
-import {Hero, Title, SectionWrapper, MarginBox, CenterBox, Small, MessageText} from '../styled';
+import {Hero, Title, SectionWrapper, MarginBox, CenterBox, Small, ErrorMessage} from '../styled';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {DataContext} from '../../contexts/data';
@@ -18,8 +19,11 @@ Their favorite time of day is dusk, and they always drink a coffee on the porch 
 const SubmitLetterRequest = () => {
     const history = useHistory();
     const dataContext = useContext(DataContext);
+    const [loading, setLoading] = useState(false);
     const {register, handleSubmit} = useForm();
+    const {addToast} = useToasts();
     const onSubmit = formData => {
+        setLoading(true);
         createLetterRequest({
             ownerId: dataContext.currentUser.uid,
             name: formData.name,
@@ -27,13 +31,21 @@ const SubmitLetterRequest = () => {
             miscInfo: formData.miscInfo,
             ownVersion: formData.draft,
             title: formData.title
-        }).then(res => {
-            // @TODO - Redirect the user to their new post, or the list of all posts, or something
-            history.push('/');
+        }).then(req => {
+            addToast('Your request has been created', {
+                appearance: 'success',
+            });
+            history.push(`/request/${req.id}`);
         })
         .catch(err => {
+            addToast('There was an error creating your request.', {
+                appearance: 'error',
+            });
             console.error(err);
-        });
+        })
+        .finally(() => {
+            setLoading(false);
+        })
     };
 
     return (
@@ -53,7 +65,7 @@ const SubmitLetterRequest = () => {
         {!dataContext.currentUser && (
             <Row>
                 <SectionWrapper>
-                    <MessageText>Only registered users can request letters.</MessageText>
+                    <ErrorMessage>Only registered users can request letters.</ErrorMessage>
                 </SectionWrapper>
             </Row>
         )}
@@ -101,8 +113,8 @@ const SubmitLetterRequest = () => {
                         <Form.Control name="title" disabled={!dataContext.currentUser} ref={register({required: true})} type="text" placeholder="Letter for partner of 2 years - looking for extra sappiness" />
                     </Form.Group>
 
-                    <Button disabled={!dataContext.currentUser} variant="primary" type="submit">
-                        Submit
+                    <Button disabled={!dataContext.currentUser || loading} variant="primary" type="submit">
+                        {loading ? 'Loading' : 'Submit'}
                     </Button>
                 </Form>
             </SectionWrapper>

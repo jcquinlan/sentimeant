@@ -77,8 +77,8 @@ const Separator = styled.div`
     margin: 60px 0;
 `;
 
-const MessageText = styled.h3`
-    font-size: 20px;
+const ErrorMessage = styled.h3`
+    font-size: 14px;
     margin-bottom: 30px;
     color: ${Colors.Red};
 `;
@@ -101,6 +101,6 @@ export {
     SectionBody,
     MarginBox,
     Separator,
-    MessageText,
+    ErrorMessage,
     ButtonRow
 };

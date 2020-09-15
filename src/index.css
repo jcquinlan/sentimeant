@@ -54,3 +54,22 @@ p, span, li, a {
   border-color: #ff9ccf;
   box-shadow: 0 0 0 0.2rem rgba(255, 74, 225, 0.25)
 }
+
+.navbar-collapse.collapsing,
+.navbar-collapse.collapse.show {
+  padding: 20px;
+  background-color: rgb(238, 238, 238);
+  margin-top: 30px;
+  margin-left: -40px;
+  margin-right: -40px;
+}
+
+.navbar-collapse.collapsing a,
+.navbar-collapse.collapse.show a {
+  margin-bottom: 20px;
+}
+
+.navbar-collapse.collapsing a:last-child,
+.navbar-collapse.collapse.show a:last-child {
+  margin-bottom: 0;
+}

@@ -18,10 +18,17 @@ const ViewOpenRequests = () => {
             const requestList = convertSnapshotToArray(requestSnapshot);
             setRequests(requestList);
             const requestIds = requestList.map(({id}) => id);
-            return getDraftsForRequests(requestIds);
+
+            if (requestIds.length) {
+                return getDraftsForRequests(requestIds)
+                    .then(draftsSnapshot => {
+                        return convertSnapshotToArray(draftsSnapshot)
+                    });
+            }
+
+            return [];
         })
-        .then(draftsSnapshot => {
-            const drafts = convertSnapshotToArray(draftsSnapshot);
+        .then(drafts => {
             setDrafts(groupBy(drafts, 'requestId'));
         })
         .finally(() => setLoading(false));

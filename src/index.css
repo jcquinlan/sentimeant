@@ -55,6 +55,11 @@ p, span, li, a {
   box-shadow: 0 0 0 0.2rem rgba(255, 74, 225, 0.25)
 }
 
+.navbar-light .navbar-toggler {
+  border-color: #ff9ccf;
+  outline-color: #ff9ccf;
+}
+
 .navbar-collapse.collapsing,
 .navbar-collapse.collapse.show {
   padding: 20px;

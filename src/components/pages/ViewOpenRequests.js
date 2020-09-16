@@ -82,7 +82,7 @@ const ViewOpenRequests = () => {
             <SectionWrapper>
                 {loadingWindowEnded && loading && <p>Loading...</p>}
                 {!loading && !requests.length && <p>There are no open requests at the moment.</p>}
-                {renderRequests()}
+                {!loading && renderRequests()}
             </SectionWrapper>
         </Row>
         </>

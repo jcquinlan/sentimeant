@@ -1,13 +1,13 @@
 import React, {useContext, useState} from 'react';
 import {useToasts} from 'react-toast-notifications';
-import {useHistory} from 'react-router-dom';
+import {useHistory, Link} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
 import {Hero, Title, SectionWrapper, MarginBox, CenterBox, Small, ErrorMessage} from '../styled';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {DataContext} from '../../contexts/data';
-import { createLetterRequest } from '../../services/requestService';
+import {createLetterRequest} from '../../services/requestService';
 
 const backgroundPlaceholder = "We met 2 years ago. My petname for them is 'Greenbean' and we went to the Grand Canyon together last year. We camped for 2 weeks there, and we said we love each other for the first time on that trip. They taught me to whistle, and I think of them when I hear whistling in songs."
 const shittyLoveLetter = "Roses are red, violets are blue, I love you as much as someone who loves someone else a whole lot."
@@ -65,7 +65,7 @@ const SubmitLetterRequest = () => {
         {!dataContext.currentUser && (
             <Row>
                 <SectionWrapper>
-                    <ErrorMessage>Only registered users can request letters.</ErrorMessage>
+                    <ErrorMessage>Only registered users can request letters. <Link to="/sign-in">Sign up here.</Link></ErrorMessage>
                 </SectionWrapper>
             </Row>
         )}

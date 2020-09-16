@@ -16,6 +16,7 @@ import SubmitLetterRequest from './components/pages/SubmitLetterRequest';
 import ViewOpenRequests from './components/pages/ViewOpenRequests';
 import SignIn from './components/pages/SignIn';
 import RequestDetail from './components/pages/RequestDetail';
+import AcceptedDraftsList from './components/pages/AcceptedDraftsList';
 
 export default function App() {
   const data = useDataContext();
@@ -42,6 +43,9 @@ export default function App() {
               <Switch>
                 <Route path="/request/:requestId">
                   <RequestDetail />
+                </Route>
+                <Route path="/accepted-drafts">
+                  <AcceptedDraftsList />
                 </Route>
                 <Route path="/open-requests">
                   <ViewOpenRequests />

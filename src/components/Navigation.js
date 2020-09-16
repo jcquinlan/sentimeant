@@ -21,6 +21,7 @@ const Navigation = () => {
     const signOut = () => {
         firebase.auth().signOut()
             .then(() => {
+                setExpanded(false);
                 history.replace('/');
                 data.setCurrentUser(null);
 
@@ -42,7 +43,8 @@ const Navigation = () => {
                         <Link onClick={() => setExpanded(false)} to="/">Home</Link>
                         <Link onClick={() => setExpanded(false)} to="/new">Request a Letter</Link>
                         <Link onClick={() => setExpanded(false)} to="/open-requests">Write a Letter</Link>
-                        {!data.currentUser && <Link to="/sign-in">Sign In</Link>}
+                        <Link onClick={() => setExpanded(false)} to="/accepted-drafts">Recent Drafts</Link>
+                        {!data.currentUser && <Link onClick={() => setExpanded(false)} to="/sign-in">Sign In</Link>}
                         {!!data.currentUser && <Link onClick={signOut}>Sign Out</Link>}
                     </Nav>
                 </Navbar.Collapse>

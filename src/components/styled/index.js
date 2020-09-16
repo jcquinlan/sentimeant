@@ -85,6 +85,14 @@ const ErrorMessage = styled.h3`
     font-size: 14px;
     margin-bottom: 30px;
     color: ${Colors.Red};
+    
+    a {
+        text-decoration: underline;
+
+        &:hover {
+            color: ${Colors.Pink};
+        }
+    }
 `;
 
 const ButtonRow = styled.div`

@@ -37,6 +37,13 @@ export async function getDrafts () {
     return await db.collection('drafts').get();
 }
 
+export async function getAcceptedDrafts () {
+    return await db.collection('drafts')
+        .where('accepted', '==', true)    
+        .orderBy('createdAt', 'desc')    
+        .get();
+}
+
 export async function getDraftsForRequest (requestId) {
     return await db.collection('drafts')
         .where('requestId', '==', requestId)

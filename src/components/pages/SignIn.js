@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {useHistory} from 'react-router-dom';
 import {Row} from 'react-bootstrap';
 import firebase from 'firebase';
+import {useToasts} from 'react-toast-notifications';
 import {Hero, Title, SectionWrapper} from '../styled';
 import SignInButtonSrc from '../../imgs/google_sign_in.png';
 import {DataContext} from '../../contexts/data';
@@ -12,13 +13,16 @@ const provider = new firebase.auth.GoogleAuthProvider();
 const SignIn = () => {
     const dataContext = useContext(DataContext);
     const history = useHistory();
+    const {addToast} = useToasts();
 
     const signInUser = () => {
         firebase.auth().signInWithPopup(provider).then(function(result) {
             dataContext.setCurrentUser(result.user);
             history.replace('/');
+            addToast('Successfully logged in', {appearance: 'success'})
           }).catch(function(error) {
-              console.error(error);
+            console.error(error);
+            addToast('Error when logging in', {appearance: 'error'})
           });
     };
 

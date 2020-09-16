@@ -44,6 +44,10 @@ const Hero = styled.div`
     p {
         font-size: 18px;
     }
+
+    @media (max-width: 575px) {
+        padding-top: 0;
+    }
 `;
 
 const SectionWrapper = styled.div`

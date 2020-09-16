@@ -28,8 +28,11 @@ const SignIn = () => {
             <Hero>
                 <SectionWrapper>
                     <Title>Sign In</Title>
-                    <p>If you want to make a new letter request, you need to make an account first.
-                        Yeah, it's annoying to have to do, but ¯\_(ツ)_/¯</p>
+                    <p>
+                        In order to make a new letter request, you have to have an account so we can
+                        safely contact you via email when a new draft is ready,
+                        and manage permissions.
+                    </p>
                     <SignInButton onClick={signInUser}>
                         <SignInButtonImage src={SignInButtonSrc} />
                     </SignInButton>

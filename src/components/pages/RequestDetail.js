@@ -65,7 +65,6 @@ const RequestDetail = () => {
             requestTitle: request.title
         })
         .then(() => {
-            // @TODO - hook up a toast message or something
             addToast('Your draft has been submitted.', {appearance: 'success'});
             history.push('/');
         })

@@ -10,10 +10,12 @@ import {getRequests, getDraftsForRequests, convertSnapshotToArray} from '../../s
 const ViewOpenRequests = () => {
     const history = useHistory();
     const [requests, setRequests] = useState([]);
+    const [loadingWindowEnded, setLoadingWindowEnded] = useState(false);
     const [loading, setLoading] = useState(true);
     const [drafts, setDrafts] = useState({});
 
     useEffect(() => {
+        setTimeout(() => setLoadingWindowEnded(true), 500);
         getRequests().then(requestSnapshot => {
             const requestList = convertSnapshotToArray(requestSnapshot);
             setRequests(requestList);
@@ -78,7 +80,7 @@ const ViewOpenRequests = () => {
 
         <Row>
             <SectionWrapper>
-                {loading && <p>Loading...</p>}
+                {loadingWindowEnded && loading && <p>Loading...</p>}
                 {!loading && !requests.length && <p>There are no open requests at the moment.</p>}
                 {renderRequests()}
             </SectionWrapper>
